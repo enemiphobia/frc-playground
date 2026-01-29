@@ -48,33 +48,31 @@ import swervelib.telemetry.SwerveDriveTelemetry;
  */
 public class Vision
 {
-
   /**
    * April Tag Field Layout of the year.
    */
-  public static final AprilTagFieldLayout fieldLayout                     = AprilTagFieldLayout.loadField(
-      AprilTagFields.k2025ReefscapeAndyMark);
+  public static final AprilTagFieldLayout fieldLayout = AprilTagFieldLayout.loadField(
+      AprilTagFields.k2026RebuiltAndymark);
   /**
    * Ambiguity defined as a value between (0,1). Used in {@link Vision#filterPose}.
    */
-  private final       double              maximumAmbiguity                = 0.25;
+  private final double maximumAmbiguity = 0.25;
   /**
    * Photon Vision Simulation
    */
-  public              VisionSystemSim     visionSim;
+  public VisionSystemSim visionSim;
   /**
    * Count of times that the odom thinks we're more than 10meters away from the april tag.
    */
-  private             double              longDistangePoseEstimationCount = 0;
+  private double longDistangePoseEstimationCount = 0;
   /**
    * Current pose from the pose estimator using wheel odometry.
    */
-  private             Supplier<Pose2d>    currentPose;
+  private Supplier<Pose2d> currentPose;
   /**
    * Field from {@link swervelib.SwerveDrive#field}
    */
-  private             Field2d             field2d;
-
+  private Field2d field2d;
 
   /**
    * Constructor for the Vision class.
@@ -366,27 +364,27 @@ public class Vision
     /**
      * Latency alert to use when high latency is detected.
      */
-    public final  Alert                        latencyAlert;
+    public final Alert latencyAlert;
     /**
      * Camera instance for comms.
      */
-    public final  PhotonCamera                 camera;
+    public final PhotonCamera camera;
     /**
      * Pose estimator for camera.
      */
-    public final  PhotonPoseEstimator          poseEstimator;
+    public final PhotonPoseEstimator poseEstimator;
     /**
      * Standard Deviation for single tag readings for pose estimation.
      */
-    private final Matrix<N3, N1>               singleTagStdDevs;
+    private final Matrix<N3, N1> singleTagStdDevs;
     /**
      * Standard deviation for multi-tag readings for pose estimation.
      */
-    private final Matrix<N3, N1>               multiTagStdDevs;
+    private final Matrix<N3, N1> multiTagStdDevs;
     /**
      * Transform of the camera rotation and translation relative to the center of the robot
      */
-    private final Transform3d                  robotToCamTransform;
+    private final Transform3d robotToCamTransform;
     /**
      * Current standard deviations used.
      */
