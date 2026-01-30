@@ -25,8 +25,11 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -68,6 +71,11 @@ public class SwerveSubsystem extends SubsystemBase
    * PhotonVision class to keep an accurate odometry.
    */
   private       Vision      vision;
+
+  // telemetry stuff
+  private final DoubleLogEntry poseX = new DoubleLogEntry(DataLogManager.getLog(), "/swerve/pose/x");
+  private final DoubleLogEntry poseY = new DoubleLogEntry(DataLogManager.getLog(), "/swerve/pose/y");
+  private final DoubleLogEntry poseRot = new DoubleLogEntry(DataLogManager.getLog(), "/swerve/pose/rotation");
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -135,6 +143,13 @@ public class SwerveSubsystem extends SubsystemBase
     vision = new Vision(swerveDrive::getPose, swerveDrive.field);
   }
 
+  public void logPose() {
+    Pose2d pose = getPose();
+    poseX.append(pose.getX());
+    poseY.append(pose.getY());
+    poseRot.append(pose.getRotation().getRadians());
+  }
+
   @Override
   public void periodic()
   {
@@ -144,6 +159,7 @@ public class SwerveSubsystem extends SubsystemBase
       swerveDrive.updateOdometry();
       vision.updatePoseEstimation(swerveDrive);
     }
+    logPose();
   }
 
   @Override
