@@ -141,26 +141,8 @@ public class RobotContainer
     Command driveFieldOrientedAngularVelocitySlow = drivebase.driveFieldOriented(driveAngularVelocitySlow);
     Command driveFieldOrientedDirectAngleKeyboardSlow      = drivebase.driveFieldOriented(driveDirectAngleKeyboard);
     Command driveSetpointGen = drivebase.driveWithSetpointGeneratorFieldRelative(driveDirectAngle);
-    
 
-
-    if (RobotBase.isSimulation() && !slowMode)
-    {
-      drivebase.setDefaultCommand(driveFieldOrientedDirectAngleKeyboard);
-    } 
-    if (RobotBase.isSimulation() && slowMode)
-    {
-      drivebase.setDefaultCommand(driveFieldOrientedDirectAngleKeyboardSlow);
-    }
-    else if (!slowMode)
-    {
-      drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
-    }
-    else if (slowMode)
-    {
-      drivebase.setDefaultCommand(driveFieldOrientedAngularVelocitySlow);
-    }
-
+    // Removed if statements for slow mode.  Need to refactor as declarative with trigger
 
     if (Robot.isSimulation())
     {
@@ -183,17 +165,9 @@ public class RobotContainer
       driverXbox.button(2).whileTrue(Commands.runEnd(() -> driveDirectAngleKeyboard.driveToPoseEnabled(true),
                                                      () -> driveDirectAngleKeyboard.driveToPoseEnabled(false)));
       
-      boolean toggle = false;
-      if (driverXbox.getRightTriggerAxis() > 0.5 && toggle == false)
-      {
-        slowMode = !slowMode;
-        toggle = true;
-      }
-      if (driverXbox.getRightTriggerAxis() < 0.5 && toggle == true)
-      {
-        toggle = false;
-      }
+      // Cleaning up Toggle Mode - Need to double check where to implement
     }
+    
     if (DriverStation.isTest())
     {
       drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); // Overrides drive command above!
