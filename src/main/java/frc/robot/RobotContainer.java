@@ -166,54 +166,15 @@ public class RobotContainer
     // Slow Mode Fix Temporary - Right Trigger Makes the Robot Drive Slow - michaudc
     driverRTrigger.whileTrue(drivebase.driveFieldOriented(driveAngularSlow));
 
+    // A: zero the gyro
+    driverA.onTrue((Commands.runOnce(drivebase::zeroGyro)));
     // X: command sequence that turns on transfer motor, waits 0.5 seconds, then turns on flywheel
     driverX.whileTrue(turretSubsystem.shootWhileHeld(TurretConstants.flywheelSpeed, 0.5));
     // debug
-    driverDpadUp.onTrue(new InstantCommand(() -> turretSubsystem.getSetPositionCommand(0.5)));
+
+    // Rotate 45° clockwise on button press
+    driverDpadUp.whenPressed(new Snap45Command(swerveDrive, 45, Math.PI));
     driverDpadRight.whileTrue(turretSubsystem.shootCommand());
-  
-    if (Robot.isSimulation())
-    {
-      Pose2d target = new Pose2d(new Translation2d(1, 4),
-                                 Rotation2d.fromDegrees(90));
-      //drivebase.getSwerveDrive().field.getObject("targetPose").setPose(target);
-      driveDirectAngleKeyboard.driveToPose(() -> target,
-                                           new ProfiledPIDController(5,
-                                                                     0,
-                                                                     0,
-                                                                     new Constraints(5, 2)),
-                                           new ProfiledPIDController(5,
-                                                                     0,
-                                                                     0,
-                                                                     new Constraints(Units.degreesToRadians(360),
-                                                                                     Units.degreesToRadians(180))
-                                           ));
-      driverXbox.start().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
-      driverXbox.button(1).whileTrue(drivebase.sysIdDriveMotorCommand());
-      driverXbox.button(2).whileTrue(Commands.runEnd(() -> driveDirectAngleKeyboard.driveToPoseEnabled(true),
-                                                     () -> driveDirectAngleKeyboard.driveToPoseEnabled(false)));
-    }
-
-    if (DriverStation.isTest())
-    {
-      drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); // Overrides drive command above!
-
-      driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-      driverXbox.y().whileTrue(drivebase.driveToDistanceCommand(1.0, 0.2));
-      driverXbox.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-      driverXbox.back().whileTrue(drivebase.centerModulesCommand());
-      driverXbox.leftBumper().onTrue(Commands.none());
-      driverXbox.rightBumper().onTrue(Commands.none());
-      
-    } else
-    {
-      driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-      driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-      driverXbox.start().whileTrue(Commands.none());
-      driverXbox.back().whileTrue(Commands.none());
-      driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-      driverXbox.rightBumper().onTrue(Commands.none());
-    }
 
     drivebase.setDefaultCommand(drivebase.driveFieldOriented(driveAngularVelocity));
 
