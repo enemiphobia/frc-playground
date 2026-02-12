@@ -166,9 +166,8 @@ public class RobotContainer
     // Slow Mode Fix Temporary - Right Trigger Makes the Robot Drive Slow - michaudc
     driverRTrigger.whileTrue(drivebase.driveFieldOriented(driveAngularSlow));
 
-    // X: Bump align (Driver)
-    // driverX.onTrue(new InstantCommand(() -> ));
-    
+    // X: command sequence that turns on transfer motor, waits 0.5 seconds, then turns on flywheel
+    driverX.whileTrue(turretSubsystem.shootWhileHeld(TurretConstants.flywheelSpeed, 0.5));
     // debug
     driverDpadUp.onTrue(new InstantCommand(() -> turretSubsystem.getSetPositionCommand(0.5)));
     driverDpadRight.whileTrue(turretSubsystem.shootCommand());
